@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="etiquette_form_view">
+        <field name="name">farinegmm.etiquette.form</field>
+        <field name="model">farinegmm.etiquette</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="previous_level" type="object" class="oe_highlight" string="Etat precedent"></button>
+                    <button name="next_level" type="object" class="oe_highlight" string="Etat suivant"></button>
+                    <field name="etat" widget="statusbar" nolabel="1"></field>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ref" invisible="1"/>
+                            <field name="refseq" readonly="1"/>
+                            <field name="renumere" />
+                            <field name="qr_code" widget='image' class="oe_avatar" style="float:left"/>
+                        </group>
+                        <group>
+<!--                            <field name="test" />-->
+                            <field name="produit" readonly="1"/>
+                            <field name="datedebut" />
+                            <field name="datelimite" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="seq_etiquette_ref" model="ir.sequence">
+        <field name="name">reference etiquette sequence</field>
+        <field name="code">seq.etiquette.refseq</field>
+        <field name="prefix">etq</field>
+<!--         <field name="number_increment">1</field>-->
+        <field name="padding">3</field>
+    </record>
+
+<record model="ir.ui.view" id="etiquette_tree_view">
+        <field name="name">farinegmm.etiquette.tree</field>
+        <field name="model">farinegmm.etiquette</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="refseq"/>
+                <field name="renumere"/>
+                <field name="produit"/>
+                <field name="datedebut" />
+                <field name="datelimite" />
+            </tree>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='etiquette_action'>
+           <field name="name">Etiquette</field>
+           <field name="res_model">farinegmm.etiquette</field>
+           <field name="view_mode">tree,form</field>
+           <field name="help" type ="html">
+                <p class="o_view_nocontent_smiling_face"></p>
+           </field>
+    </record>
+
+    <menuitem name="Farine GMM" id="farine_root" sequence="7"/>
+    <menuitem name="Etiquette" id="sub_etiquette_root" parent="farine_root" action="etiquette_action"/>
+</odoo>

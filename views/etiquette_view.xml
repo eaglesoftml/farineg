@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="annuler" type="object" class="oe_highlight" string="Annuler"></button>
                     <button name="previous_level" type="object" class="oe_highlight" string="Etat precedent"></button>
                     <button name="next_level" type="object" class="oe_highlight" string="Etat suivant"></button>
                     <field name="etat" widget="statusbar" nolabel="1"></field>
@@ -19,7 +20,7 @@
                             <field name="qr_code" widget='image' class="oe_avatar" style="float:left"/>
                         </group>
                         <group>
-<!--                            <field name="test" />-->
+                            <field name="test" />
                             <field name="produit" readonly="1"/>
                             <field name="datedebut" />
                             <field name="datelimite" />

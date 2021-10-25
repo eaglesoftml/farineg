@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError
 import qrcode
 from datetime import datetime
 import cv2
+import pandas as pd
 
 
 
@@ -30,7 +31,7 @@ class etiquette(models.Model):
 
     qr_code = fields.Binary("QR Code", attachment=True, store=True)
 
-    # test = fields.Char("source qrcode", compute="generate_qr_code")
+    test = fields.Char("source qrcode", compute="generate_qr_code")
 
     # @api.onchange('ref')
     # def _random(self):
@@ -49,7 +50,8 @@ class etiquette(models.Model):
     @api.onchange('ref')
     def generate_qr_code(self):
         for line in self:
-            line.ref = "etq_000" + str(random.randint(1, 1000000))
+            # if line.ref == "":
+            line.ref = "etq_" + str(random.randint(1, 1000000000))
             secret_key = urandom(16)
             # data = pd.read_csv(filename, encoding='unicode_escape')
             iv = urandom(16)
@@ -57,12 +59,14 @@ class etiquette(models.Model):
             message = line.ref
             # ref_crypt = obj.encrypt(message*16)
             # line.ref = ref_crypt
-            ref_crypt = base64.b64encode(obj.encrypt(message * 16))
-            line.ref = ref_crypt
+            ref_crypt = obj.encrypt(message*16)
+            line.ref = base64.b64encode(ref_crypt)
 
-            # rev_obj = AES.new(secret_key, AES.MODE_CBC, iv)
-            # ref_decrypt = base64.b64encode(rev_obj.decrypt(ref_crypt*16).decode('latin-1').strip())
-            # line.test = ref_decrypt
+            rev_obj = AES.new(secret_key, AES.MODE_CBC, iv)
+            ref_decrypt = rev_obj.decrypt(ref_crypt)
+            line.test = ref_decrypt.decode('latin-1')
+            # line.test = base64.b64decode(ref_decrypt.decode(encoding='utf-8'))
+            # line.test = pd.read_csv(ref_decrypt, encoding='unicode_escape')
 
             qr = qrcode.QRCode(
                 version=1,
@@ -121,6 +125,10 @@ class etiquette(models.Model):
                 return line.write({'etat':'brl'})
             else:
                 raise ValidationError("C'est la toute première étape")
+
+    def annuler(self):
+        for line in self:
+            return line.write({'etat': 'anl'})
 
 
     def _date(self):

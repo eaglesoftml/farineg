@@ -10,8 +10,8 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import qrcode
 from datetime import datetime
-import cv2
-import pandas as pd
+# import cv2
+# import pandas as pd
 
 
 
@@ -50,7 +50,7 @@ class etiquette(models.Model):
     @api.onchange('ref')
     def generate_qr_code(self):
         for line in self:
-            # if line.ref == "":
+            # if line.ref == "New":
             line.ref = "etq_" + str(random.randint(1, 1000000000))
             secret_key = urandom(16)
             # data = pd.read_csv(filename, encoding='unicode_escape')
@@ -59,7 +59,7 @@ class etiquette(models.Model):
             message = line.ref
             # ref_crypt = obj.encrypt(message*16)
             # line.ref = ref_crypt
-            ref_crypt = obj.encrypt(message*16)
+            ref_crypt = obj.encrypt(message.encode('latin-1')*16)
             line.ref = base64.b64encode(ref_crypt)
 
             rev_obj = AES.new(secret_key, AES.MODE_CBC, iv)
